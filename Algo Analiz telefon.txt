@@ -1,0 +1,491 @@
+Heapsort ile ilgili her şey 
+
+Ağacın yüksekliği kök düğümün yüksekliği
+n elemanlı heap ağacın yüksekliği O(logn)
+yükseklik=yapraktan köke kadar giden çizgilerin toplamı
+
+Heap İşlemleri
+
+Max_Heapify(): temel işlemi heapin yapısını complete binary
+treeye her ekleme ve silme işlemi sonrası benzetmek
+çalışma zamanı yükseklik yani O(logn) kadardır
+
+Max_Heapfiy(A[], i){
+ L=Left(i); R=Right(i);
+if(L <= heap_size(A) && A[L]>A[i])
+     largest=L;
+else
+    largest=R;
+if(R <= heap_size(A) && A[R] > A[largest])
+    largest=R;
+if(largest != i)
+    Swap(A,i,largest);
+    Max_Heapfiy(A[],largest);
+}
+Heapfiy de en kötü durumda en fazla 2n/3 düğüm vardır
+Böylece en kötü durum için reküransı T(2n/3)+O(1)
+yani logn de gerçekleşir
+
+n=2m-1
+n=2^d-1
+
+BuildHeap(): Amacı heap olmayan bir dizi heap e dönüştürmektir
+
+Buildheap(A){
+heap_siz(A)=length(A);
+for(i=[length[A]/2] down to 1)
+       Max_Heapify(A,i);
+}
+Alt ağaçtaki işlemler bitmeden üst ağacın işlemi gerçekleşmez
+
+Heapsort(A)    çalışma zamanı = nlogn
+{
+     BuildHeap(A);  O(n)->
+   for(i = length(A) downto 2){ n
+        Swap(A[1], A[i]);  
+       heap_size(A) -=1;   içteki logn
+      Heapify(A,1); böylece dizinin son elemanı ilk eleman yapılmış olur
+	}
+}
+bu yapıda max heap göre ilk eleman çıkarıldığı müddetçe en büyük 
+ilk eleman olucaktır
+
+Insert(S,x): S dizisine x elemanı ekler
+Maximum(S): S dizisindeki ilk elemanı döndürür genellikle ilk elemandır
+ExtractMax(S): S dizisindeki maks elemanı geri döndürür ve diziden çıkarır.
+
+HeapInsert(A[],int key){
+   heap_size[A] ++;
+  i=heap_size[A];
+ while(i>1 && A[Parent(i)] < key)
+{
+   A[i] = A[Parent(i)];
+  i= Parent(i);
+}
+A[i] = key;
+}
+
+HeapMaximum(A){
+return A[1];
+}
+------------------------------------------------------------------------------------------------------------------------------
+Quick Sort ile ilgili her şey
+
+Hoore 1962
+
+Böl ve fethet göre çalışır
+
+yerinde sıralar
+
+quicksortta işi yapan kısım bölüntüdür
+
+1.Aşama böl
+
+dizi içinde ya en baştan ya en sondan ya da ortadan pivot seçilir
+ve elemanlar pivotun sağında ve solunda yeniden yerinde sıralanır soldakiler pivottan küçük 
+sağdakiler pivottan büyük olma şartı ile ilk döngü tamamlanır sonra solda ve sağda oluşan parçalarda
+kendi aralarında pivot seçip sıralanır ve bu rekürsif olarak sürekli işlem bitene kadar gerçekleşir
+
+en kötü çalışma senaryoları : Dizi tersten veya düz sıralı ise
+pivot mesela baştan seçilse ve kendisinden sonraki sağ taraf hep büyük olursa pivot sağa kaydıkça yer değişimi
+işlemi zorlaşır aynı şekilde solada bu durum en küçük veya en büyük eleman etrafında bölüntülemeden dolayıdır.
+
+
+2. Aşama Birleştirme
+ işlemi O(n) defa gerçekleşir
+
+quicksort sözde kodu bileceksin !!!!!
+
+quicksort(A,p,r) p: A dizisinin ilk indis   r:son indis
+  if p<r
+      then q <-- Partıtıon(A,p,r)
+          quicksort(A,p,q-1)
+          quicksort(A,q+1,r)
+
+quıcksort(A,1,n): ilk arama
+
+partıtıon(A,p,q)  p: ilk indis q: son eleman
+   x <-- A[p]   x burada pivottur yani ilk indis pivot olmuş
+   i <--p
+  for j <-- p + 1 to q
+     do if A[j] <= x
+           then i <-- i+1
+               swap A[i] <--> A[j]
+swap A[p] <--> A[i]
+return i
+
+çalışma şekli 
+pivot var i değeri va j değeri var 
+eğer pivot j den küçükse j değeri pivottan küçük olana kadar 1 artar eğer pivottan küçük olursa i değeiri
+1 artıp o anda j nin bulunduğu değerle yer değişir işlem böyle devam edip gider ta ki j sona dayandığı zaman
+o zaman pivot i nin o anda bulunduğu yer ile yer değişir böylece pivotun solu kendinden küçük sağı kendinden
+büyük olur sonra alt diziler kendi aralarında aynı işlemi tekrarlar böylece dizi sıralanır.
+
+T(n) = T(0) + T(n-1) + O(n)
+= O(1)+T(n-1)+O(n)=T(n-1)+O(n)= O(n^2) aritmetik seri yerine koyma ile çözülebiliyor
+
+en iyi durumda bölüntü diziyi eşit böler
+
+T(n) = 2T(n/2)+O(n) = O(nlogn)
+
+eğer eşit gelmedi
+böyle geldi
+o zman bunuda
+özyineleme ağacı ile çözebiliriz
+T(n) = T(1/10*n) +T(9/10*n) +O(n) bu da nlogn i garantilemiş olur
+
+en iyi ve en kötü durumların birleşimi bize ortalama durumu verir o da nlogn dir genelde şanşlı isek
+
+bunu garantilemenin bir yolu vardır o da randomize quicksorttur
+burda quicksorttan tek farkı bölüntülemeyi rastgele yaparak şansını artırmasıdır
+
+kaba kodu:
+
+R_partıtıon(A,p,r)
+ i <-- Random(p,r)
+Swap A[r]<-->A[i]
+return partıtıon(A,p,r)
+
+quicksort(A,p,r) p: A dizisinin ilk indis   r:son indis
+          q <-- r_partıtıon(A,p,r)
+          quicksort(A,p,q)
+          quicksort(A,q+1,r)
+
+2/n (TOPLAM) k=1 den n-1 e kadar E[T(k)]+O(n)
+----------------------------------------------------------------------------------------------------------------------------------
+Doğrusal zamanda sıralama algoritmaları
+
+karar ağaçları
+yüksekliği nlogn dir
+
+
+Counting Sort çalışma zamanı O(n)
+karşılaştırma yapılmaz
+3 adımda gerçekleşir:
+
+Giriş:
+elimizde dizi var 1 den k ya kadar k küçükse iyi bir algoritma olur büyükse nlognden kötüdür
+
+Çıkış:  bir B dizisi 1 den n kadar sıralı 
+
+Yedek depolama: bir C dizisi 1 den k ya kadar
+
+  O(n+k) k tamsayı olamalıdır 
+
+k=O(n) ise çalışma zamanı O(n)
+
+k=n^2 ise k=2^n çok kötü çalışma zamanı olur
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+RadixSort:
+
+T(n,b) = b/r.(n+2^r)
+
+2^r = k  
+
+eğer 
+2^r yi n ye eşitlersek n+ n = n = 2^r  r = logn olur
+
+O(dn) kadar çalışır
+o ile n^d-1 aralığındaki sayılarla b= dlogn i elde ederiz
+
+32 bite kadar destekler
+ve en çok 3 en az 11 geçiş hakkı tanır
+
+
+
+
+565
+232
+543
+877
+234
+
+böyle bir yapısı var sıralamaya birler basamakları denk alınarak başlanır.
+
+birler basamağı küçük olanı yukarı taşı
+
+232
+543
+234
+565
+877
+
+daha sonra onlar basamağına bakacaz küçük olandan başlayacaz
+
+232
+234
+543
+565
+877
+
+bu örnekte yüzlere bakmadan direk sıralandı
+
+biz bu adımları d olarak alırız  dizi 2^n adımda gerçekleşti
+ 3 basamağa kadar güzel sıralama yapıyor fakat basamak sayısı arttıkça algoritmanın adım sayısı artacak
+-----------------------------------------------------------------------------------------------------------------------------
+BucketSort:
+en kötü çalışma zamanı O(n^2) çünkü kovalarda bir kova içinde çok eleman olması ve diğer kovalara düzgün 
+dağılım sağlanamaması
+
+bağıl liste yapısını kullanır bucketlara eleman atarken
+sıralamayı insertion sorta göre yapar
+
+en iyi O(n+k) kadar çalışır.
+
+çalışma mantığı
+
+dizideki en büyük sayının ondalık kısmı bizim kova dizimizin uzunluğunu belirler
+
+kaba kodu 
+
+bucket-sort(A)
+    n <-- length(A)
+   for i <-- 0 to n
+         do insert A[i] into list B[(n x A[i])]
+ for i  <-- 0 to n
+        do sort B[i] with insertion sort 
+concatenate the lists B[0],B[1], B[n-1] together
+in order
+
+aralık kova sayısı
+
+m = n*max(A[i])/(max(A[i])+x) 
+burdaki x kova sayısını azaltmaya yarar
+
+örnek n=8 olsun maks değer 49 olsun kova sayısını azaltmak için x = 1
+
+m = 8*49/50 = 7.84   7.kova
+m = 5*49/50 = 0,48   4.kova vs
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Hashıng 
+
+Bazı benzersiz değerler tabloya yerleşirken yerleşeceği yer daha önceden dolmuş işe çakışma denen olay meydana
+gelecektir
+
+
+çakışma çözümleri
+
+1) zincir
+aynı yuvadaki kayıtları bir bağıl liste ile ilişkilendirmek, erişim süresi O(n) dir, ekleme maliyeti O(1) oluyor silmede
+O(n)
+zincirlemede ortalama durum çözümlenmesi  (yük oranı α = n/m  yuva başına ortalama anahtar sayısıdır)
+n bu tablodaki anahtarların sayısı ve m de yuvaların sayısı olsun 
+başarısız bir aramadaki beklenen süre = O(1+α)   1 burda bir kıyım fonk yuvaya erişim, α listeyi arama
+beklenen arama süresi = O(1), eğer α= O(1) veya n = O(m) ise n bölü m birbirine eşitse tablo tam dolar ve arama
+O(1) olur
+
+2)bölme
+
+h(k) = k mod m   
+
+eğer m = 2^r ise  hash k nın bütün bitlerine bağımlı olmaz en baş bitleride yeterli olucaktır
+
+örneğin k = 1011000111 (011010) ise ve r = 6 ise son 6 bit ele alınır 
+h(k) = 011010
+
+3)çarpma metodu (önemli !!!!!)
+
+h(k) = (A.k mod 2 ^w) rsh(w -r)    A= 2^w-1 < A < 2^w
+
+örneğin m = 8 olsun ve bilgisayarımızda w= 7 bit sözcükler olsun
+h(k) = (A.k mod 2^w) rsh(w -r) = 
+r burda 8 = 2^3  r = 3 olur 
+sağa doğru öteleme 
+rsh(7-3) = 4 bit öteleme 
+
+A = 2^7-6 < A< 2^7 = A yı 64<A<128 sayısı arasından seçmeliyiz 
+
+k değeri = 107 
+
+A.k = 107*89 = 9523 = 10010100110011 çıkar sonra  2^7 ye göre mod alıcaz
+
+mod sonucu = (1001010) 0110011
+soldakiler önemsiz bitler 
+şimdi öteleme yaparsak 011(0011) parantez içindeki sayılarda ötelendiği için önemsiz hale gelecektir
+
+bu yüzden kalan ifade h(k) = 011 = 3 imiş
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Sondalama işlemleri
+açık adresleme yöntemleri için kullanılır
+
+1)Doğrusal sondalama  h'(k) = önceden modu alınmı ifadeyi bize gösterir i = t.sayı dan  oluşur
+h(k,i) = (h'(k) + i ) mod m
+
+kayıtlar yığın şeklinde toplanır, silme ve arama işlemleri aynı hash değeri sayısı
+arttıkça artar 
+
+
+2) Quadratic sondalama h'(k) = önceden modu alınmı ifadeyi bize gösterir c1 ve c2 != 0
+h(k,i) = (h'(k) + c1*i  + c2*i^2) mod m
+
+Tablo boyutuna dikkat edilmesse sonsuza kadar çalışma riski vardır
+
+3) Çifte kıyımlama h1(k) ve h2(k) gibi iki basit kıyım fonk varsa
+
+h(k,i) = (h1(k) + i*h2(k)) mod m
+teorem kanıtı 
+i  0 dan sonsuza toplam α^i = 1/1-α beklenen sonda sayısı  
+
+Evrensel hash fonksiyonu önemli !!!!
+
+i 0 dan r ye kadar toplam a*k mod size
+
+örneğin elimizdeki tablo boyutu size 11 olsun 
+ve anahtarımızda 39752 olsun anahtarı parçalarsak = <3,9,7,5,2>
+bu parçalar tablo boyutundan büyük olamaz
+eğer tablo boyutu 29 ise ve anahtarımız string bir değerse örneğin "hello world" gibi
+parçalanmış anahtar yapımıza alfabedeki karşılık gelen değerler yazılır
+<8,5,12,12,15,23,15,18,12,4>
+
+daha sonra parçalama sayısı kadar
+a ile rastgele sayı üretecez a=<a0,a1....ar> where 0<=ai<size
+
+daha sonra üretilen her a değeri ile parçalanmış değerleri çarpıp sonra toplamlarını
+alıp modunu alıp tabloya yerleştiririz.
+
+örneğin context : hash strings of length 3 in a table of size 131
+let a = <35,100,21> üretilen a sayıları
+h("xyz") = (35*120 + 100*121+ 21*122)%131 = 129 
+burada ascıı kodları alınmış 
+
+bütün bunlar beklenen zamanda başarımla ilgilidir.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Mükemmmel hash
+
+en kötü zamanda tablodaki aramayı  O(1) yapmak
+
+O(n) arama iteratif, O(logn) arama BST,  O(1) arama hash
+
+Alanımız sabit, sabit değerlerde örneğin türkçede 5000 kelime kullanıyoz
+bu 5000 kelime zırt diye değişemiyeceği için biz İng karşılıklarını istiyoz 
+mükemmel hash burda kullanılablir
+
+mi çakışma sayılarını ifade eder ve statik
+tablonun boyutunu oluşturur
+ai iler ise rastgele a sayılarıdır
+
+dezavantajı fazla ek alan kullanır
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Dynamic programming
+
+Richard Bellman tarafından 1950 lerde bulunmuştur.
+böl ve fethet yöntemine benzer olarak alt problemlerin çözümlerini elde etmek için kullanılır.
+
+Böl ve fethette alt problemler birbirinden bağımsız olması gerekir fakat dp mantığında
+problemler bağımsız değilse bile uygulanabilir formattadır.
+
+DP her alt problemi bir kez çözer ve çözümleri bir tabloda saklar ve bu şekilde aynı alt problemin 
+birden fazla ortaya çıkma durumunda her seferinde tekrar çözüm yapmaktansa, tabloda saklamış 
+olduğu değeri problemde yerine koyar.
+
+bu durum bellekten tasarrufu beraberinde getiren bir yöntemdir.
+DP, genelde en iyileme (optimizasyon) problemlerine uygulanır. 
+Bu tip problemlerin birden fazla çözümü olabilir.
+Amaç bu çözümler içinde en iyisini bulmaktır.
+
+Dinamik programlama uygulamalarında temel olarak 3 teknikten faydalanılır:
+
+Çözümü aynı olan alt-problemler
+
+Büyük bir problemi küçük parçalara bölmek ve bu küçük
+parçaları kullanarak baştaki büyük problemimizin sonucuna
+ulaşmak ( Fibonacci denklemi buna en iyi örnektir)
+
+Çözdüğümüz her alt-problemin sonucunu bir yere not almak
+ve gerektiğinde bu sonucu kullanarak aynı problemi tekrar
+tekrar çözmeyi engellemek.
+
+Genel olarak dinamik programlama kullanırken
+aşağıdaki dört adımı göz önüne almamız gerekir ve
+dört adım DP’ nin temelini oluştururlar.
+
+1 . Optimal çözümün yapısının karakteristiği ortaya
+çıkarılmalı. 
+
+ 2. Özyinelemeli olarak optimal çözümün değerini
+tanımlamalı.
+
+3. Optimal çözümün değeri bottom-up(alttan-üste)
+yaklaşımıyla çözülür, böylece alt problemlerin daha
+önce çözülmesi gereklidir (veya memoization
+kullanılır)
+
+4. Elde edilen bilgilerden (optimal çözüme ulaşmak
+için yapılan seçimlerin sırasıdır) optimal çözüm
+yapılandırılır.
+
+Algoritma tasarım teknikleri
+ Şimdiye kadar görülenler:
+ Iterative (brute-force) algoritmalar
+ Örnek, insertion sort
+ Diğer veri yapılarını kullanan algoritmalar
+ Örnek, heap sort
+ Divide-and-conquer algoritmaları
+ Örnek, binary search, merge sort, quick sort
+
+
+Binom Katsayıları
+Binom, polinomların özel hali, iki terimli polinom demek
+oluyor. Örnek verecek olursak. (x+y), (x-5), (3x^2+5y) gibi iki
+terimli ifadelere binom diyoruz.
+
+(X ve Y içermesi gerekiyor yoksa binom olarak sayılmaz.)
+
+(x+y)^n
+ifadesinin tek tek terimlerin neler olduğunu gösteren
+formül kastediliyor.
+(x+y)^2=x^2+2xy+y^2
+
+ Binom açılımı birkaç değişik şekilde ifade edilebilir:
+(x+y)^5
+ifadesini x^5+5x^4y+10x^3y^2+10x^2y^3+5xy^4+y^5 olarak
+açabiliyoruz. Ancak, (x+y)^18 gibi bir açılım yapmak
+istediğimizde, gerçekten büyük bir üçgen kurmak zorunda
+kalacağımızı da göz önünde tutalım.
+
+Binom Teoremi:
+(x+y)^n=x^n+nx^n-1y+n(n-1)x^^n-2y^2/2!+n(n-1)(n-2)x^n-3y^3/3!+ ...+n(n-1) (n-2)...(n-k)x
+^n-ky^k/k!+...+nxy^n-1+y^n
+
+(x+y)^n = ∑  k=0 dan n'e kadar [n!/k!(n-k)!]x^n-ky^k
+
+C(k,n) = n!/k!(n-k)!
+C(k,n), toplam n nesneden mümkün k nesne seçenekleri sayıyor
+
+Büyük k ve n sayıları için, faktöriyel hesaplama zor olur, ve
+"C(k,n)=C(k,n-1)+C(k-1,n-1)" formül kullanılır.
+
+Direkt C(k,n)=C(k,n-1)+C(k-1,n-1) kullanma çok
+hesaplama gerekiyor, ama dinamik programlama için
+gereken bütün durumlar var:
+
+Optimum altyapı var – C(k,n), daha küçük k ve n
+C-katsayıları kullanarak hesaplanır 
+
+(yani – C(k,n)=C(k,n-1)+C(k-1,n-1))
+Örtüşen altproblemler özelliği var – C katsayıların hepsi
+aynı şekilde hesaplanır (yani şu formül tekrar tekrar
+kullanılır, C(k,n)=C(k,n-1)+C(k-1,n-1))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
