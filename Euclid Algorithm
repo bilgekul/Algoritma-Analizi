@@ -1,0 +1,40 @@
+def count_numbers_between_arrays(arr1, arr2):
+    # Find GCF of arr2
+    gcf = arr2[0]
+    for i in range(1, len(arr2)):
+        gcf = gcd(gcf, arr2[i])
+    
+    # Find all factors of GCF that are in arr1
+    count = 0
+    for i in range(1, gcf + 1):
+        if gcf % i == 0:
+            # Check if all factors of i are in arr1
+            all_factors_present = True
+            for factor in factors(i):
+                if factor not in arr1:
+                    all_factors_present = False
+                    break
+            if all_factors_present:
+                count += 1
+    
+    return count
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def factors(n):
+    factors = set()
+    for i in range(1, int(n**0.5) + 1):
+        if n % i == 0:
+            factors.add(i)
+            factors.add(n // i)
+    return factors
+The count_numbers_between_arrays function takes two arrays as input and returns the count of valid numbers between the two arrays. The gcd function implements the Euclidean algorithm to find the GCF, and the factors function returns a set of all factors of a given integer.
+
+Note that the above algorithm has a time complexity of O(G log G), where G is the GCF of the second array, due to the loop over all integers from 1 to G and the computation of their factors. However, since G is the maximum value that needs to be considered, this should be reasonable for most practical purposes.
+
+
+
+
